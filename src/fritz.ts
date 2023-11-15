@@ -10,14 +10,13 @@ interface FBLoginResponse {
 	SessionInfo: FBSessionInfo;
 }
 
-export async function login() {
-	const res = await fetch("http://fritz.box/login_sid.lua?version=2");
+let sid: string = "";
 
+export async function login(username: string, password: string) {
+	const res = await fetch("http://fritz.box/login_sid.lua?version=2");
 	const raw = await res.text();
 
 	const data = convert.xml2js(raw, { compact: true }) as FBLoginResponse;
-
-	console.log(data);
 
 	const challenge = data.SessionInfo.Challenge._text.split("$") as [
 		string,
@@ -30,7 +29,7 @@ export async function login() {
 	const [_, iter1, salt1, iter2, salt2] = challenge;
 
 	const hash1 = pbkdf2Sync(
-		"***",
+		password,
 		Buffer.from(salt1, "hex"),
 		parseInt(iter1),
 		32,
@@ -49,7 +48,7 @@ export async function login() {
 		).toString("hex");
 
 	const form = new URLSearchParams();
-	form.append("username", "***");
+	form.append("username", username);
 	form.append("response", challengeResponse);
 
 	const res2 = await fetch("http://fritz.box/login_sid.lua?version=2", {
@@ -63,8 +62,6 @@ export async function login() {
 	const raw2 = await res2.text();
 
 	const data2 = convert.xml2js(raw2, { compact: true }) as FBLoginResponse;
-
-	console.log(data2);
 
 	return data2.SessionInfo.SID._text;
 }

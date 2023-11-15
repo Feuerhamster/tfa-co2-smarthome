@@ -1,5 +1,5 @@
 declare module "co2-monitor" {
-	interface Co2Response {
+	export interface Co2Response {
 		value: number;
 		type: "int";
 		unit: "parts per million";
@@ -36,11 +36,13 @@ declare module "co2-monitor" {
 		): void;
 		on(event: "data", callback: (co2: Response) => void): void;
 
+		off(event: "data" | "co2" | "temperature" | "error" | "connected" | "disconnected", callback: (...args: any[]) => void)
+
 		connect(callback: (error?: Error) => void): void;
 		startTransfer(callback: (error?: Error) => void): void;
 
 		get temperature(): number;
-		get co2(): number;
+		get co2(): Co2Response;
 	}
 
 	export = Co2Monitor;

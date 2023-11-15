@@ -5,7 +5,7 @@
 	"description": "TFA AirCo2ntrol mini smarthome integration with own pwa and fritz AHA API",
 	"main": "dist/main.js",
 	"scripts": {
-		"dev": "tsc && node dist/main.js",
+		"dev": "tsc && node dist/main.js --trace-warnings",
 		"prettier": "prettier . --write"
 	},
 	"author": "",
@@ -15,7 +15,11 @@
 		"typescript": "^5.2.2"
 	},
 	"dependencies": {
+		"@types/cors": "^2.8.16",
+		"@types/express": "^4.17.21",
 		"co2-monitor": "^3.0.0",
+		"cors": "^2.8.5",
+		"express": "^4.18.2",
 		"i": "^0.3.7",
 		"npm": "^10.2.3",
 		"prettier": "^3.1.0",

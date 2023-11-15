@@ -30,3 +30,23 @@ function ppmToPercent(ppm: number) {
 }
 
 //export function ppmToFraction(ppm: number) {
+
+/**
+ * util to format sse messages
+ * @param event event name
+ * @param data event data
+ * @param id optional event id
+ * @returns formatted string
+ */
+export function formatSSE(event: string, data?: any, id?: number) {
+	let str = "";
+
+	if (id) str += `id: ${id}\n`;
+
+	str += `event: ${event}\n`;
+	if (data) str += `data: ${JSON.stringify(data)}\n`;
+
+	str += `\n`;
+
+	return str;
+}
