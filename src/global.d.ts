@@ -36,7 +36,16 @@ declare module "co2-monitor" {
 		): void;
 		on(event: "data", callback: (co2: Response) => void): void;
 
-		off(event: "data" | "co2" | "temperature" | "error" | "connected" | "disconnected", callback: (...args: any[]) => void)
+		off(
+			event:
+				| "data"
+				| "co2"
+				| "temperature"
+				| "error"
+				| "connected"
+				| "disconnected",
+			callback: (...args: any[]) => void,
+		);
 
 		connect(callback: (error?: Error) => void): void;
 		startTransfer(callback: (error?: Error) => void): void;

@@ -8,7 +8,7 @@ export function initDevice() {
 			console.error(error);
 			process.exit(1);
 		}
-	
+
 		co2Monitor.startTransfer((error) => {
 			if (error) {
 				console.error(error);

@@ -22,7 +22,7 @@
 
 	onMount(() => {
 		$connectionState = EConnectionState.Connecting;
-		const events = new EventSource("http://192.168.178.26:3000/data-stream");
+		const events = new EventSource("http://localhost:3000/data-stream");
 
 		events.addEventListener("co2", (ev) => {
 			$ppm = parseInt(ev.data);

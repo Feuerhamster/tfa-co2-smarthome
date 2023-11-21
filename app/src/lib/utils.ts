@@ -24,5 +24,3 @@ function fractionToHue(fraction: number) {
 export function ppmToHue(ppm: number) {
 	return fractionToHue(ppmToFraction(ppm));
 }
-
-
