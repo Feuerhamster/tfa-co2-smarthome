@@ -1,31 +1,35 @@
 <script lang="ts">
-	import Chart from 'chart.js/auto';
-	import { onMount } from 'svelte';
-	import { color, ppm } from './stores';
+	import Chart from "chart.js/auto";
+	import { onMount } from "svelte";
+
+	export let data: [number, number][];
 
 	let chartCanvas: HTMLCanvasElement;
 
 	let chart: Chart;
 
-	Chart.defaults.plugins.legend.display = false;
-	Chart.defaults.borderColor = "rgba(255, 255, 255, 0)";
-	Chart.defaults.color = '#FFF';
-
 	onMount(async () => {
 		chart = new Chart(chartCanvas, {
-			type: 'line',
+			type: "line",
 			data: {
 				xLabels: [],
 				datasets: [{
-					label: 'PPM',
-					borderColor: '#fff',
+					label: "PPM",
+					borderColor: "#fff",
 					data: [],
 					tension: 0.4,
-					cubicInterpolationMode: 'monotone'
+					cubicInterpolationMode: "monotone"
 				}]
 			},
 			options: {
+				color: "#FFF",
 				responsive: true,
+				borderColor: "#FFFFFF00",
+				plugins: {
+					legend: {
+						display: false
+					}
+				},
 				scales: {
 					x: {
 						ticks: {
@@ -33,31 +37,31 @@
 						}
 					},
 					y: {
-						min: 400
+						min: 400,
+						max: 1800
 					}
 				}
 			}
 		});
-	})
+
+		updateChartData(data);
+	});
+
+	function updateChartData(data: [number, number][]) {
+		chart.data.datasets[0].data = data.map((a) => a[1])
+		chart.data.xLabels = data.map((a) => new Date(a[0]).toLocaleString())
+		chart.update();
+	}
 
 	$: {
-		if(chart) {
-			chart.data.datasets[0].borderColor = `hsl(${$color}, 55%, 52%)`
-			chart.update();
+		if (chart) {
+			updateChartData(data);
 		}
 	}
-	
-	ppm.subscribe((value) => {
-		if(chart) {
 
-			if (chart.data.datasets[0].data.length <= 24) {
-				chart.data.datasets[0].data.push(value)
-				chart.data.xLabels?.push(1)
-			}
-
-			chart.update();
-		}
-	})
+	$: {
+		console.log(data);
+	}
 </script>
 
 

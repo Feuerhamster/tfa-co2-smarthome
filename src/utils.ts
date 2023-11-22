@@ -3,8 +3,8 @@ export function clamp(value: number, min = 0, max = 1) {
 }
 
 export function ppmToFraction(ppm: number) {
-	const lowerBound = 400;
-	const upperBound = 1500;
+	const lowerBound = 450;
+	const upperBound = 1400;
 
 	const fraction = (ppm - lowerBound) / (upperBound - lowerBound);
 	const clamped = clamp(fraction);
@@ -85,4 +85,8 @@ export class TimePeriod {
 		let minutes = time.getHours() * 60 + time.getMinutes();
 		return minutes >= this.start && minutes <= this.end;
 	}
+}
+
+export function coarsifyValue(value: number) {
+	return Math.round(value / 10);
 }

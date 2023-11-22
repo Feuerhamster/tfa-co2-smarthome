@@ -3,25 +3,20 @@
 	import Chart from "$lib/Chart.svelte";
 	import IndicatorBox from "$lib/IndicatorBox.svelte";
 	import { PhoneCall, PhoneMissed, Lightbulb, LightbulbOff, Wifi, WifiOff } from "lucide-svelte";
-	import { ppm } from "$lib/stores";
-
-	/*setTimeout(() => {
-		setInterval(() => $ppm += Math.round(Math.random() * 70), 2000);
-	}, 1000);*/
-
-	let active = true;
+	import { config, logs, ppm } from "$lib/stores";
+	import { setConfig } from "$lib/api";
 </script>
 
 <IndicatorBox value={$ppm} />
 
 <section>
-	<Chart />
+	<Chart data={$logs} />
 </section>
 
 <section>
-	<SwitchButton label="Telefonalarm" icon={[PhoneCall, PhoneMissed]} active={active} on:click={() => active = !active}/>
-	<SwitchButton label="Lichtindikator" icon={[Lightbulb, LightbulbOff]} active={active} on:click={() => active = !active}/>
-	<SwitchButton label="Autom. Abwesenheitsschaltung" icon={[Wifi, WifiOff]} active={active} on:click={() => active = !active}/>
+	<SwitchButton label="Telefonalarm" icon={[PhoneCall, PhoneMissed]} active={$config.phone_alert} on:click={() => setConfig("phone_alert", !$config.phone_alert)}/>
+	<SwitchButton label="Lichtindikator" icon={[Lightbulb, LightbulbOff]} active={$config.light_indicator} on:click={() => setConfig("light_indicator", !$config.light_indicator)}/>
+	<SwitchButton label="Autom. Abwesenheitsschaltung" icon={[Wifi, WifiOff]} active={$config.auto_absence_switching} on:click={() => setConfig("auto_absence_switching", !$config.auto_absence_switching)}/>
 </section>
 
 <style lang="scss">

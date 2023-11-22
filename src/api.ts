@@ -19,9 +19,13 @@ const showLogCount = process.env.SHOW_LOG_COUNT
 const api = Express();
 
 api.use(cors());
+api.use((req, res, next) => {
+	console.log(req.body);
+	next();
+});
 api.use(Express.json());
 
-api.get("/data-stream", (req, res) => {
+api.get("/api/data-stream", (req, res) => {
 	// Establish SSE
 	res.writeHead(200, {
 		"Cache-Control": "no-cache",
@@ -71,19 +75,36 @@ api.get("/data-stream", (req, res) => {
 	req.on("error", cleanup);
 });
 
-api.get("/logs", async (req, res) => {
+api.get("/api/logs", async (req, res) => {
 	const l = await logs(showLogCount);
+	console.log(l);
 	res.send(l);
 });
 
+api.get("/api/config", async (req, res) => {
+	const conf = {
+		phone_alert: await config("phone_alert"),
+		light_indicator: await config("light_indicator"),
+		auto_absence_switching: await config("auto_absence_switching"),
+	};
+
+	res.send(conf);
+});
+
 api.put(
-	"/config/:key",
-	async (req: Request<{ key: ConfigKey }, boolean>, res: Response<boolean>) => {
-		if (!configKeys.includes(req.params.key) || typeof req.body !== "boolean") {
+	"/api/config/:key",
+	async (
+		req: Request<{ key: ConfigKey }, {}, { value: boolean }>,
+		res: Response<boolean>,
+	) => {
+		if (
+			!configKeys.includes(req.params.key) ||
+			typeof req.body.value !== "boolean"
+		) {
 			return res.status(422).end();
 		}
 
-		const r = await config(req.params.key, req.body);
+		const r = await config(req.params.key, req.body.value);
 		res.send(r);
 	},
 );

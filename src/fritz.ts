@@ -139,12 +139,12 @@ export async function getWifiDevices() {
 		method: "POST",
 		headers: {
 			"Content-Type": "application/x-www-form-urlencoded",
-			"Accept": "application/json"
+			Accept: "application/json",
 		},
 		body: form.toString(),
 	});
 
-	const res = await rawReq.json() as FritzBoxWlanDevicesResponse;
+	const res = (await rawReq.json()) as FritzBoxWlanDevicesResponse;
 
 	return res.data.wlanSettings.knownWlanDevices;
 }

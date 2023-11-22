@@ -6,6 +6,7 @@ const db = new ClassicLevel<string, number>("./db.level", {
 });
 export const logDB = db.sublevel<number, number>("logs", {
 	valueEncoding: "json",
+	keyEncoding: "json",
 });
 
 export function startLoggingAndPurging(
@@ -25,7 +26,7 @@ export function startLoggingAndPurging(
 }
 
 export async function logs(limit: number) {
-	return await logDB.iterator({ limit }).all();
+	return (await logDB.iterator({ limit, reverse: true }).all()).reverse();
 }
 
 /**
@@ -47,7 +48,12 @@ export const configDB = db.sublevel<string, number>("config", {
 export async function config(key: ConfigKey, value?: boolean) {
 	if (value) {
 		await configDB.put(key, +value);
+		return value;
 	}
-	//return Boolean(await configDB.get(key));
-	return true;
+
+	try {
+		return Boolean(await configDB.get(key));
+	} catch (e) {
+		return false;
+	}
 }

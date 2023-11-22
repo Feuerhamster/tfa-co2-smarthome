@@ -4,7 +4,8 @@
 	import '@fontsource/fira-sans/500.css';
 	import '@fontsource/fira-sans/700.css';
 	import { onMount } from "svelte";
-	import { ppm, connectionState, EConnectionState, themeColor } from "$lib/stores";
+	import { getConfigComplete, getLogs, sseConnection } from "$lib/api";
+	import { logs } from "$lib/stores";
 
 	if (pwaInfo) {
 		registerSW({
@@ -20,33 +21,15 @@
 
 	$: webManifest = pwaInfo ? pwaInfo.webManifest.linkTag : "";
 
-	onMount(() => {
-		$connectionState = EConnectionState.Connecting;
-		const events = new EventSource("http://localhost:3000/data-stream");
-
-		events.addEventListener("co2", (ev) => {
-			$ppm = parseInt(ev.data);
-		});
-
-		events.onopen = () => {
-			$connectionState = EConnectionState.Connected;
-		};
-		events.onerror = () => {
-			$connectionState = EConnectionState.Disconnected;
-		};
+	onMount(async () => {
+		sseConnection();
+		getConfigComplete();
+		$logs = await getLogs();
 	});
-	
-	let i = 0;
-	setInterval(() => i += 1, 1000);
 </script>
 
 <svelte:head>
 	{@html webManifest}
-	{#if $themeColor !== ""}
-		{#key i}
-			<meta name="theme-color" content={$themeColor} />
-		{/key}
-	{/if}
 </svelte:head>
 
 <slot />

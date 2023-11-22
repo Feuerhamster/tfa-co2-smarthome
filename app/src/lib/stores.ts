@@ -1,4 +1,5 @@
 import { writable } from "svelte/store";
+import type { ConfigStore } from "./types";
 
 export enum EConnectionState {
 	Connecting,
@@ -12,3 +13,11 @@ export const connectionState = writable<EConnectionState>(
 	EConnectionState.Disconnected,
 );
 export const themeColor = writable<string>("");
+
+export const config = writable<ConfigStore>({
+	phone_alert: false,
+	light_indicator: false,
+	auto_absence_switching: false,
+});
+
+export const logs = writable<[number, number][]>([]);
