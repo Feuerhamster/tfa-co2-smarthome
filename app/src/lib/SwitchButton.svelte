@@ -1,11 +1,22 @@
 <script lang="ts">
-	export let icon: [ConstructorOfATypedSvelteComponent, ConstructorOfATypedSvelteComponent];
+	import LoadingSpinner from "./LoadingSpinner.svelte";
+
+	export let icon: [
+		ConstructorOfATypedSvelteComponent,
+		ConstructorOfATypedSvelteComponent,
+	];
 	export let label: string;
 	export let active: boolean;
+	export let loading = true;
 </script>
 
 <button class:active on:click role="switch" aria-checked={active}>
-	<svelte:component this={active ? icon[0] : icon[1]} size={26} />
+	{#if loading}
+		<LoadingSpinner />
+	{:else}
+		<svelte:component this={active ? icon[0] : icon[1]} size={26} />
+	{/if}
+
 	<span class="label">{label}</span>
 	<span class="track">
 		<div class="dot" class:active></div>
@@ -17,6 +28,7 @@
 		background-color: rgba(255, 255, 255, 0.06);
 		border-radius: 1rem;
 		padding: 0.8rem 1rem;
+		height: 3rem;
 
 		border: none;
 		display: flex;
@@ -27,7 +39,7 @@
 		@media (prefers-reduced-motion) {
 			transition: none;
 		}
-		
+
 		display: flex;
 		align-items: center;
 		gap: 0.8rem;
@@ -47,30 +59,30 @@
 				color: var(--color-primary);
 			}
 		}
-		
+
 		.label {
 			flex: 1;
 			text-align: left;
 		}
-		
+
 		.track {
 			background-color: #4f5153;
 			width: 40px;
 			height: 20px;
 			border-radius: 10px;
 			position: relative;
-			
+
 			.dot {
 				position: absolute;
 				width: 20px;
 				height: 20px;
 				border-radius: 10px;
-				
+
 				left: 0;
 				background-color: var(--color-secondary);
-				
+
 				transition: left 0.2s;
-				
+
 				&.active {
 					left: 20px;
 					background-color: var(--color-primary);

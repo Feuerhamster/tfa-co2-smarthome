@@ -1,8 +1,8 @@
 <script lang="ts">
-	import { onMount, tick } from "svelte";
+	import { tick } from "svelte";
 	import PulseIndicator from "./PulseIndicator.svelte";
 	import { EConnectionState, color, connectionState, themeColor } from "./stores";
-	import { ppmToHue } from "./utils";
+	import { ppmToHue } from "./colorConversion.js";
 
 	export let value: number;
 

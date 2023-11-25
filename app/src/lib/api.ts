@@ -22,7 +22,15 @@ export function sseConnection() {
 		log.shift();
 		log.push(data);
 		logs.set(log);
-	})
+	});
+
+	events.addEventListener("config", (ev) => {
+		const { key, value } = JSON.parse(ev.data) as { key: keyof ConfigStore, value: boolean };
+
+		const updater: Partial<ConfigStore> = {};
+		updater[key] = value;
+		config.set({ ...get(config), ...updater });
+	});
 
 	events.onopen = () => {
 		EConnectionState.Connected;
@@ -33,7 +41,7 @@ export function sseConnection() {
 	};
 }
 
-export async function setConfig(key: keyof ConfigStore, value: boolean) {
+export async function putConfig(key: keyof ConfigStore, value: boolean) {
 	const res = await fetch(apiUrl + "config/" + key, {
 		method: "PUT",
 		headers: {

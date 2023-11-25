@@ -1,5 +1,6 @@
-import { writable } from "svelte/store";
+import { get, writable } from "svelte/store";
 import type { ConfigStore } from "./types";
+import { putConfig } from "./api";
 
 export enum EConnectionState {
 	Connecting,

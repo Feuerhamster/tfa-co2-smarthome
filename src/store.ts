@@ -46,7 +46,7 @@ export const configDB = db.sublevel<string, number>("config", {
 });
 
 export async function config(key: ConfigKey, value?: boolean) {
-	if (value) {
+	if (value !== undefined) {
 		await configDB.put(key, +value);
 		return value;
 	}

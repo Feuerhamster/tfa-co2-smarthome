@@ -11,6 +11,7 @@ import {
 	logDB,
 	configDB,
 } from "./store.js";
+import path from "path";
 
 const showLogCount = process.env.SHOW_LOG_COUNT
 	? parseFloat(process.env.SHOW_LOG_COUNT)
@@ -19,11 +20,9 @@ const showLogCount = process.env.SHOW_LOG_COUNT
 const api = Express();
 
 api.use(cors());
-api.use((req, res, next) => {
-	console.log(req.body);
-	next();
-});
 api.use(Express.json());
+const appPath = new URL("../app/build", import.meta.url).pathname.substring(1);
+api.use(Express.static(appPath));
 
 api.get("/api/data-stream", (req, res) => {
 	// Establish SSE
@@ -53,6 +52,7 @@ api.get("/api/data-stream", (req, res) => {
 	logDB.on("put", logDataListener);
 
 	const configDataListener = (key: ConfigKey, value: boolean) => {
+		console.log(key, value);
 		res.write(formatSSE("config", { key, value }));
 	};
 
@@ -103,6 +103,8 @@ api.put(
 		) {
 			return res.status(422).end();
 		}
+
+		console.log(req.body);
 
 		const r = await config(req.params.key, req.body.value);
 		res.send(r);

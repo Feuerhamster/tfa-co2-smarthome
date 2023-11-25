@@ -4,7 +4,7 @@ export function clamp(value: number, min = 0, max = 1) {
 
 export function ppmToFraction(ppm: number) {
 	const lowerBound = 450;
-	const upperBound = 1400;
+	const upperBound = 1600;
 
 	const fraction = (ppm - lowerBound) / (upperBound - lowerBound);
 	const clamped = clamp(fraction);
@@ -13,7 +13,7 @@ export function ppmToFraction(ppm: number) {
 }
 
 export function fractionToHue(fraction: number) {
-	const from = 120;
+	const from = 140;
 	const to = 0;
 
 	const hue = (to - from) * fraction + from;

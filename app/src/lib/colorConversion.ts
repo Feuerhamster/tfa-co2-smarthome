@@ -3,8 +3,8 @@ function clamp(value: number, min = 0, max = 1) {
 }
 
 function ppmToFraction(ppm: number) {
-	const lowerBound = 400;
-	const upperBound = 1500;
+	const lowerBound = 450;
+	const upperBound = 1600;
 
 	const fraction = (ppm - lowerBound) / (upperBound - lowerBound);
 	const clamped = clamp(fraction);
