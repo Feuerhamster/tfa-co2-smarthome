@@ -21,7 +21,9 @@ const api = Express();
 
 api.use(cors());
 api.use(Express.json());
-const appPath = new URL("../app/build", import.meta.url).pathname.substring(1);
+
+const appPath = path.join(process.cwd(), "/app/build");
+
 api.use(Express.static(appPath));
 
 api.get("/api/data-stream", (req, res) => {

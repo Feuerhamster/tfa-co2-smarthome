@@ -1,42 +1,38 @@
 # Build Image
-FROM node:lts-alpine as build
+FROM node:lts as build
+
+RUN apt update
+
+RUN apt install build-essential
 
 WORKDIR /tmp/
 
-COPY /app/package.json ./app/
-COPY /app/package-lock.json ./app/
-
-WORKDIR ./app/
-
-RUN npm install
-
 COPY . .
 
-RUN npm run build
-
-WORKDIR ../
-
-COPY package.json ./
-COPY package-lock.json ./
-
 RUN npm install
-
-COPY . .
-
 RUN npx tsc
 
+WORKDIR /tmp/app/
+
+RUN npm install
+RUN npm run build
+
 # Production Image
-FROM node:lts-alpine
+FROM node:lts
 
 WORKDIR /app/
 
 ENV NODE_ENV=production
 
-COPY --from=build tmp/app/build/ ./app/build/
+COPY --from=build tmp/app/build/ /app/app/build/
 
-COPY --from=build tmp/dist ./dist
-COPY --from=build tmp/package*.json ./
+COPY --from=build tmp/dist /app/dist
+COPY --from=build tmp/package*.json /app/
 
 RUN npm ci --production --ignore-scripts
+
+RUN apt update
+
+RUN apt install libudev-dev
 
 CMD [ "node", "dist/main.js" ]
