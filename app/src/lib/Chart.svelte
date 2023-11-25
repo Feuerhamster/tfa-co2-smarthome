@@ -81,6 +81,10 @@
 		gap: 1rem;
 	}
 
+	canvas {
+		max-width: 100%;
+	}
+
 	h2 {
 		font-size: 1.4rem;
 		font-weight: 800;

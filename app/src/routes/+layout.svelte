@@ -42,7 +42,6 @@
 	}
 
 	:global(html) {
-		min-height: 100%;
 		color: white;
 		font: 18px "Fira Sans", sans-serif;
 		letter-spacing: 0.04rem;
@@ -52,7 +51,7 @@
 		background-color: var(--color-bg);
 		font-weight: 400;
 		font-size: 1rem;
-		min-height: 100vh;
+		min-height: 100svh;
 		width: 100%;
 		padding: 0;
 		margin: 0;
