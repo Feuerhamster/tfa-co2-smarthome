@@ -10,12 +10,17 @@ import {
 	ConfigKey,
 	logDB,
 	configDB,
+	getAveragePPM,
 } from "./store.js";
 import path from "path";
 
 const showLogCount = process.env.SHOW_LOG_COUNT
 	? parseFloat(process.env.SHOW_LOG_COUNT)
 	: 36;
+
+const logAverageDaysBack = process.env.LOG_PURGE_KEEP_DAYS
+	? parseFloat(process.env.LOG_PURGE_KEEP_DAYS)
+	: 5;
 
 const api = Express();
 
@@ -91,6 +96,15 @@ api.get("/api/config", async (req, res) => {
 	};
 
 	res.send(conf);
+});
+
+api.get("/api/stats", async (req, res) => {
+	const averagePPM = await getAveragePPM(logAverageDaysBack);
+
+	res.send({
+		daysBack: logAverageDaysBack,
+		average: averagePPM,
+	});
 });
 
 api.put(

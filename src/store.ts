@@ -57,3 +57,15 @@ export async function config(key: ConfigKey, value?: boolean) {
 		return false;
 	}
 }
+
+export async function getAveragePPM(daysBack: number) {
+	const d = new Date();
+	d.setDate(d.getDate() - daysBack);
+	const allLogEntries = await logDB.iterator({ gt: d.getTime() }).all();
+
+	let totalPPM = 0;
+
+	allLogEntries.forEach((e) => (totalPPM += e[1]));
+
+	return totalPPM / allLogEntries.length;
+}
