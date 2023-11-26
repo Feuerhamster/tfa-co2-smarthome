@@ -1,5 +1,6 @@
 import { ClassicLevel } from "classic-level";
 import { co2Monitor } from "./co2Monitor.js";
+import { calculateDaytimeAverage } from "./utils.js";
 
 const db = new ClassicLevel<string, number>("./db.level", {
 	valueEncoding: "json",
@@ -58,7 +59,10 @@ export async function config(key: ConfigKey, value?: boolean) {
 	}
 }
 
-export async function getAveragePPM(daysBack: number) {
+export async function getAveragePPM(
+	daysBack: number,
+	daytimeHours: [number, number],
+) {
 	const d = new Date();
 	d.setDate(d.getDate() - daysBack);
 	const allLogEntries = await logDB.iterator({ gt: d.getTime() }).all();
@@ -67,5 +71,12 @@ export async function getAveragePPM(daysBack: number) {
 
 	allLogEntries.forEach((e) => (totalPPM += e[1]));
 
-	return totalPPM / allLogEntries.length;
+	const totalAverage = totalPPM / allLogEntries.length;
+	const daytimeAverage = calculateDaytimeAverage(
+		allLogEntries,
+		daytimeHours[0],
+		daytimeHours[1],
+	);
+
+	return { totalAverage, daytimeAverage };
 }

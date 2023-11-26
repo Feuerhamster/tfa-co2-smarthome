@@ -22,6 +22,13 @@ const logAverageDaysBack = process.env.LOG_PURGE_KEEP_DAYS
 	? parseFloat(process.env.LOG_PURGE_KEEP_DAYS)
 	: 5;
 
+const daytimeHours = process.env.STATS_DAYTIME_HOURS
+	? (process.env.STATS_DAYTIME_HOURS.split(",").map((e) => parseFloat(e)) as [
+			number,
+			number,
+	  ])
+	: ([7, 2] as [number, number]);
+
 const api = Express();
 
 api.use(cors());
@@ -99,11 +106,16 @@ api.get("/api/config", async (req, res) => {
 });
 
 api.get("/api/stats", async (req, res) => {
-	const averagePPM = await getAveragePPM(logAverageDaysBack);
+	const { totalAverage, daytimeAverage } = await getAveragePPM(
+		logAverageDaysBack,
+		daytimeHours,
+	);
 
 	res.send({
 		daysBack: logAverageDaysBack,
-		average: averagePPM,
+		totalAverage,
+		daytimeAverage,
+		daytimeHours: daytimeHours,
 	});
 });
 
