@@ -1,8 +1,8 @@
 <script lang="ts">
 	import { pwaInfo } from "virtual:pwa-info";
 	import { registerSW } from "virtual:pwa-register";
-	import '@fontsource/fira-sans/500.css';
-	import '@fontsource/fira-sans/700.css';
+	import "@fontsource/fira-sans/500.css";
+	import "@fontsource/fira-sans/700.css";
 	import { onMount } from "svelte";
 	import { getConfigComplete, getLogs, sseConnection } from "$lib/api";
 	import { logs } from "$lib/stores";
@@ -43,7 +43,9 @@
 
 	:global(html) {
 		color: white;
-		font: 18px "Fira Sans", sans-serif;
+		font:
+			18px "Fira Sans",
+			sans-serif;
 		letter-spacing: 0.04rem;
 	}
 
@@ -64,9 +66,10 @@
 		flex-direction: column;
 		align-items: stretch;
 		justify-content: flex-start;
-		gap: 2rem;
+		gap: 1.5rem;
 		min-height: 100vh;
 		max-width: 580px;
 		flex-grow: 1;
+		padding-bottom: 1rem;
 	}
 </style>

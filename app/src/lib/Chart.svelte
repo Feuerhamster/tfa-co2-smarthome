@@ -67,7 +67,10 @@
 </script>
 
 <article>
-	<h2>Verlauf</h2>
+	<hgroup>
+		<h2>Verlauf</h2>
+		<h3>letzen 3 Stunden</h3>
+	</hgroup>
 
 	<canvas bind:this={chartCanvas}></canvas>
 </article>
@@ -83,8 +86,20 @@
 		max-width: 100%;
 	}
 
-	h2 {
-		font-size: 1.4rem;
-		font-weight: 800;
+	hgroup {
+		display: flex;
+		flex-direction: column;
+		gap: 0.2rem;
+
+		h2 {
+			font-size: 1.4rem;
+			font-weight: 800;
+		}
+
+		h3 {
+			opacity: 0.75;
+			font-weight: normal;
+			font-size: 0.8rem;
+		}
 	}
 </style>
