@@ -49,12 +49,14 @@
 
 <IndicatorBox value={$ppm} />
 
-<InformationBox
-	icon={Wind}
-	title="Vorraussichtlich lüften (bei {targetValue} PPM)"
-	value={ventlationValue}
-	iconColor="var(--color-blue)"
-/>
+<section>
+	<InformationBox
+		icon={Wind}
+		title="Vorraussichtlich lüften (bei {targetValue} PPM)"
+		value={ventlationValue}
+		iconColor="var(--color-blue)"
+	/>
+</section>
 
 <section>
 	<Chart data={$logs} />
