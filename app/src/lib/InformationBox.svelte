@@ -15,7 +15,7 @@
 	article {
 		background-color: rgba(255, 255, 255, 0.06);
 		border-radius: 1rem;
-		padding: 1rem 1rem;
+		padding: 1rem 0.8rem;
 		border: none;
 		display: grid;
 		grid-template-areas:

@@ -4,8 +4,13 @@
 	import "@fontsource/fira-sans/500.css";
 	import "@fontsource/fira-sans/700.css";
 	import { onMount } from "svelte";
-	import { getConfigComplete, getLogs, sseConnection } from "$lib/api";
-	import { logs } from "$lib/stores";
+	import {
+		getConfigComplete,
+		getLogs,
+		getStats,
+		sseConnection,
+	} from "$lib/api";
+	import { logs, stats } from "$lib/stores";
 
 	if (pwaInfo) {
 		registerSW({
@@ -25,6 +30,7 @@
 		sseConnection();
 		getConfigComplete();
 		$logs = await getLogs();
+		$stats = await getStats();
 	});
 </script>
 

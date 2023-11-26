@@ -28,7 +28,7 @@
 		background-color: rgba(255, 255, 255, 0.06);
 		border-radius: 1rem;
 		padding: 0.8rem 1rem;
-		height: 3rem;
+		height: 3.25rem;
 
 		border: none;
 		cursor: pointer;

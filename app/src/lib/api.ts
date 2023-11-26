@@ -1,7 +1,7 @@
 import { dev } from "$app/environment";
 import { get } from "svelte/store";
 import { EConnectionState, config, connectionState, logs, ppm } from "./stores";
-import type { ConfigStore } from "./types";
+import type { ConfigStore, PPM, StatsData, Timestamp } from "./types";
 
 const apiUrl = new URL(
 	"/api/",
@@ -25,7 +25,10 @@ export function sseConnection() {
 	});
 
 	events.addEventListener("config", (ev) => {
-		const { key, value } = JSON.parse(ev.data) as { key: keyof ConfigStore, value: boolean };
+		const { key, value } = JSON.parse(ev.data) as {
+			key: keyof ConfigStore;
+			value: boolean;
+		};
 
 		const updater: Partial<ConfigStore> = {};
 		updater[key] = value;
@@ -65,5 +68,10 @@ export async function getConfigComplete() {
 export async function getLogs() {
 	const res = await fetch(apiUrl + "logs");
 
-	return (await res.json()) as [number, number][];
+	return (await res.json()) as [Timestamp, PPM][];
+}
+
+export async function getStats() {
+	const res = await fetch(apiUrl + "stats");
+	return (await res.json()) as StatsData;
 }

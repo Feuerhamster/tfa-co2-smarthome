@@ -1,5 +1,5 @@
 import { get, writable } from "svelte/store";
-import type { ConfigStore } from "./types";
+import type { ConfigStore, PPM, StatsData, Timestamp } from "./types";
 import { putConfig } from "./api";
 
 export enum EConnectionState {
@@ -21,7 +21,6 @@ export const config = writable<ConfigStore>({
 	auto_absence_switching: false,
 });
 
-export type Timestamp = number;
-export type PPM = number;
-
 export const logs = writable<[Timestamp, PPM][]>([]);
+
+export const stats = writable<StatsData | null>(null);

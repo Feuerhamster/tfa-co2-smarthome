@@ -11,11 +11,13 @@
 		WifiOff,
 		Wind,
 	} from "lucide-svelte";
-	import { config, logs, ppm } from "$lib/stores";
+	import { config, logs, ppm, stats } from "$lib/stores";
 	import { putConfig } from "$lib/api";
 	import InformationBox from "$lib/InformationBox.svelte";
 	import { getGradient, getTimeUntilValueReached } from "$lib/prediction";
 	import { get } from "svelte/store";
+	import StatsComponent from "$lib/StatsComponent.svelte";
+	import HeaderGroup from "$lib/HeaderGroup.svelte";
 
 	let timePrediction = 0;
 	const targetValue = 1400;
@@ -62,7 +64,11 @@
 	<Chart data={$logs} />
 </section>
 
+<StatsComponent />
+
 <section>
+	<HeaderGroup title="Einstellungen" />
+
 	<LoadingSwitchButton
 		label="Telefonalarm"
 		icon={[PhoneCall, PhoneMissed]}

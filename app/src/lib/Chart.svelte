@@ -1,6 +1,7 @@
 <script lang="ts">
 	import Chart from "chart.js/auto";
 	import { onMount } from "svelte";
+	import HeaderGroup from "./HeaderGroup.svelte";
 
 	export let data: [number, number][];
 
@@ -67,10 +68,7 @@
 </script>
 
 <article>
-	<hgroup>
-		<h2>Verlauf</h2>
-		<h3>letzen 3 Stunden</h3>
-	</hgroup>
+	<HeaderGroup title="Verlauf" subtitle="letzten 3 Stunden"></HeaderGroup>
 
 	<canvas bind:this={chartCanvas}></canvas>
 </article>
@@ -84,22 +82,5 @@
 
 	canvas {
 		max-width: 100%;
-	}
-
-	hgroup {
-		display: flex;
-		flex-direction: column;
-		gap: 0.2rem;
-
-		h2 {
-			font-size: 1.4rem;
-			font-weight: 800;
-		}
-
-		h3 {
-			opacity: 0.75;
-			font-weight: normal;
-			font-size: 0.8rem;
-		}
 	}
 </style>
