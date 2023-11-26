@@ -19,9 +19,13 @@
 
 	let timePrediction = 0;
 	const targetValue = 1400;
+	let lastPPMUpdate = Date.now();
 
-	setInterval(updatePrediction, 1000 * 60);
-	ppm.subscribe(updatePrediction);
+	setInterval(updatePrediction, 1000 * 30);
+	ppm.subscribe(() => {
+		lastPPMUpdate = Date.now();
+		updatePrediction();
+	});
 	logs.subscribe(updatePrediction);
 
 	function updatePrediction() {
@@ -31,7 +35,8 @@
 			gradient,
 			targetValue,
 		);
-		timePrediction = Math.floor(timeFromLastPPM / 60);
+		const timeToLastPPMUpdate = (Date.now() - lastPPMUpdate) / 1000;
+		timePrediction = Math.floor((timeFromLastPPM - timeToLastPPMUpdate) / 60);
 	}
 
 	let ventlationValue = "0 Minuten";
