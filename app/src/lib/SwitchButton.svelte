@@ -31,7 +31,6 @@
 		height: 3rem;
 
 		border: none;
-		display: flex;
 		cursor: pointer;
 
 		transition: background-color 0.2s;

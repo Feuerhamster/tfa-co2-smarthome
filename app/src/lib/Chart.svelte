@@ -13,13 +13,15 @@
 			type: "line",
 			data: {
 				xLabels: [],
-				datasets: [{
-					label: "PPM",
-					borderColor: "#fff",
-					data: [],
-					tension: 0.4,
-					cubicInterpolationMode: "monotone"
-				}]
+				datasets: [
+					{
+						label: "PPM",
+						borderColor: "#fff",
+						data: [],
+						tension: 0.4,
+						cubicInterpolationMode: "monotone",
+					},
+				],
 			},
 			options: {
 				color: "#FFF",
@@ -27,29 +29,29 @@
 				borderColor: "#FFFFFF00",
 				plugins: {
 					legend: {
-						display: false
-					}
+						display: false,
+					},
 				},
 				scales: {
 					x: {
 						ticks: {
-							display: false
-						}
+							display: false,
+						},
 					},
 					y: {
 						min: 400,
-						max: 1800
-					}
-				}
-			}
+						max: 1800,
+					},
+				},
+			},
 		});
 
 		updateChartData(data);
 	});
 
 	function updateChartData(data: [number, number][]) {
-		chart.data.datasets[0].data = data.map((a) => a[1])
-		chart.data.xLabels = data.map((a) => new Date(a[0]).toLocaleString())
+		chart.data.datasets[0].data = data.map((a) => a[1]);
+		chart.data.xLabels = data.map((a) => new Date(a[0]).toLocaleString());
 		chart.update();
 	}
 
@@ -64,17 +66,13 @@
 	}
 </script>
 
-
 <article>
-	<h2>
-		Verlauf
-	</h2>
-	
+	<h2>Verlauf</h2>
+
 	<canvas bind:this={chartCanvas}></canvas>
 </article>
 
 <style lang="scss">
-
 	article {
 		display: flex;
 		flex-direction: column;

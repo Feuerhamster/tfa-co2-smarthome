@@ -21,4 +21,7 @@ export const config = writable<ConfigStore>({
 	auto_absence_switching: false,
 });
 
-export const logs = writable<[number, number][]>([]);
+export type Timestamp = number;
+export type PPM = number;
+
+export const logs = writable<[Timestamp, PPM][]>([]);

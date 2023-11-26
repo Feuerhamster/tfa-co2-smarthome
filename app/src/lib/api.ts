@@ -5,7 +5,7 @@ import type { ConfigStore } from "./types";
 
 const apiUrl = new URL(
 	"/api/",
-	dev ? "http://localhost:3000" : window.location.origin,
+	dev ? "http://192.168.178.31:3002" : window.location.origin,
 ).href;
 
 export function sseConnection() {

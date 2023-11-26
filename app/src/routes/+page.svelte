@@ -2,24 +2,79 @@
 	import LoadingSwitchButton from "$lib/LoadingSwitchButton.svelte";
 	import Chart from "$lib/Chart.svelte";
 	import IndicatorBox from "$lib/IndicatorBox.svelte";
-	import { PhoneCall, PhoneMissed, Lightbulb, LightbulbOff, Wifi, WifiOff } from "lucide-svelte";
+	import {
+		PhoneCall,
+		PhoneMissed,
+		Lightbulb,
+		LightbulbOff,
+		Wifi,
+		WifiOff,
+		Wind,
+	} from "lucide-svelte";
 	import { config, logs, ppm } from "$lib/stores";
 	import { putConfig } from "$lib/api";
+	import InformationBox from "$lib/InformationBox.svelte";
+	import { getGradient, getTimeUntilValueReached } from "$lib/prediction";
 	import { get } from "svelte/store";
-	import { onMount } from "svelte";
 
+	let timePrediction = 0;
+	const targetValue = 1400;
+
+	setInterval(updatePrediction, 1000 * 60);
+	ppm.subscribe(updatePrediction);
+	logs.subscribe(updatePrediction);
+
+	function updatePrediction() {
+		const gradient = getGradient(get(logs));
+		const timeFromLastPPM = getTimeUntilValueReached(
+			get(ppm),
+			gradient,
+			targetValue,
+		);
+		timePrediction = Math.floor(timeFromLastPPM / 60);
+	}
+
+	let ventlationValue = "0 Minuten";
+
+	$: {
+		ventlationValue =
+			timePrediction > 0 ? `${timePrediction} Minuten` : "Jetzt lüften!";
+	}
 </script>
 
 <IndicatorBox value={$ppm} />
+
+<InformationBox
+	icon={Wind}
+	title="Vorraussichtlich lüften (bei {targetValue} PPM)"
+	value={ventlationValue}
+	iconColor="var(--color-blue)"
+/>
 
 <section>
 	<Chart data={$logs} />
 </section>
 
 <section>
-	<LoadingSwitchButton label="Telefonalarm" icon={[PhoneCall, PhoneMissed]} active={$config.phone_alert} on:click={() => putConfig("phone_alert", !$config.phone_alert)}/>
-	<LoadingSwitchButton label="Lichtindikator" icon={[Lightbulb, LightbulbOff]} active={$config.light_indicator} on:click={() => putConfig("light_indicator", !$config.light_indicator)}/>
-	<LoadingSwitchButton label="Autom. Abwesenheitsschaltung" icon={[Wifi, WifiOff]} active={$config.auto_absence_switching} on:click={() => putConfig("auto_absence_switching", !$config.auto_absence_switching)}/>
+	<LoadingSwitchButton
+		label="Telefonalarm"
+		icon={[PhoneCall, PhoneMissed]}
+		active={$config.phone_alert}
+		on:click={() => putConfig("phone_alert", !$config.phone_alert)}
+	/>
+	<LoadingSwitchButton
+		label="Lichtindikator"
+		icon={[Lightbulb, LightbulbOff]}
+		active={$config.light_indicator}
+		on:click={() => putConfig("light_indicator", !$config.light_indicator)}
+	/>
+	<LoadingSwitchButton
+		label="Autom. Abwesenheitsschaltung"
+		icon={[Wifi, WifiOff]}
+		active={$config.auto_absence_switching}
+		on:click={() =>
+			putConfig("auto_absence_switching", !$config.auto_absence_switching)}
+	/>
 </section>
 
 <style lang="scss">
