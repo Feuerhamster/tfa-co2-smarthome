@@ -1,4 +1,4 @@
-import type { PPM, Timestamp } from "./stores";
+import type { PPM, Timestamp } from "./types";
 
 const outlierFilterRatio = 0.2;
 

@@ -46,6 +46,15 @@
 	$: {
 		ventlationValue =
 			timePrediction > 0 ? `${timePrediction} Minuten` : "Jetzt lüften!";
+
+		if (timePrediction > 120) {
+			const h = parseFloat((timePrediction / 60).toFixed(1));
+			ventlationValue = `${h} Stunden`;
+		} else if (timePrediction <= 120) {
+			ventlationValue = `${timePrediction} Minuten`;
+		} else {
+			ventlationValue = "Jetzt lüften!";
+		}
 	}
 </script>
 
