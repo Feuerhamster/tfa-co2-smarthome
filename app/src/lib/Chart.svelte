@@ -41,7 +41,10 @@
 					},
 					y: {
 						min: 400,
-						max: 1800,
+						max: 1600,
+						ticks: {
+							color: "#FFFFFFAA",
+						},
 					},
 				},
 			},

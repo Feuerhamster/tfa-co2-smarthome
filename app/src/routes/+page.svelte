@@ -10,6 +10,7 @@
 		Wifi,
 		WifiOff,
 		Wind,
+		Cloudy,
 	} from "lucide-svelte";
 	import { config, logs, ppm, stats } from "$lib/stores";
 	import { putConfig } from "$lib/api";
@@ -22,6 +23,7 @@
 	let timePrediction = 0;
 	const targetValue = 1400;
 	let lastPPMUpdate = Date.now();
+	let ppmPerHour = 0;
 
 	setInterval(updatePrediction, 1000 * 30);
 	ppm.subscribe(() => {
@@ -39,6 +41,7 @@
 		);
 		const timeToLastPPMUpdate = (Date.now() - lastPPMUpdate) / 1000;
 		timePrediction = Math.floor((timeFromLastPPM - timeToLastPPMUpdate) / 60);
+		ppmPerHour = Math.round(gradient * 60 * 60);
 	}
 
 	let ventlationValue = "0 Minuten";
@@ -61,11 +64,21 @@
 <IndicatorBox value={$ppm} />
 
 <section>
+	<HeaderGroup
+		title="Aktueller Bericht"
+		subtitle="Basierend auf den letzten 3 Stunden"
+	/>
 	<InformationBox
 		icon={Wind}
 		title="Vorraussichtlich lüften (bei {targetValue} PPM)"
 		value={ventlationValue}
 		iconColor="var(--color-blue)"
+	/>
+	<InformationBox
+		icon={Cloudy}
+		title="Anstieg CO2 Pro Stunde"
+		value={`${ppmPerHour} PPM`}
+		iconColor="var(--color-secondary)"
 	/>
 </section>
 

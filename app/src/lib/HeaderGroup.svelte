@@ -17,8 +17,8 @@
 		gap: 0.2rem;
 
 		h2 {
-			font-size: 1.4rem;
-			font-weight: 800;
+			font-size: 1.25rem;
+			font-weight: bold;
 		}
 
 		h3 {
