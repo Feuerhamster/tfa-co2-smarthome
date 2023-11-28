@@ -76,7 +76,7 @@
 	/>
 	<InformationBox
 		icon={Cloudy}
-		title="Anstieg CO2 Pro Stunde"
+		title="Anstieg CO2 pro Stunde"
 		value={`${ppmPerHour} PPM`}
 		iconColor="var(--color-secondary)"
 	/>
