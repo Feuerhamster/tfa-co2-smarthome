@@ -53,7 +53,7 @@
 		if (timePrediction > 120) {
 			const h = parseFloat((timePrediction / 60).toFixed(1));
 			ventlationValue = `${h} Stunden`;
-		} else if (timePrediction <= 120) {
+		} else if (timePrediction <= 120 && timePrediction > 0) {
 			ventlationValue = `${timePrediction} Minuten`;
 		} else {
 			ventlationValue = "Jetzt lüften!";
