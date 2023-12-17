@@ -33,6 +33,6 @@ RUN npm ci --production --ignore-scripts
 
 RUN apt update
 
-RUN apt install libudev-dev
+RUN apt install -y libudev-dev
 
 CMD [ "node", "dist/main.js" ]
