@@ -1,19 +1,8 @@
 <script lang="ts">
-	import LoadingSwitchButton from "$lib/LoadingSwitchButton.svelte";
 	import Chart from "$lib/Chart.svelte";
 	import IndicatorBox from "$lib/IndicatorBox.svelte";
-	import {
-		PhoneCall,
-		PhoneMissed,
-		Lightbulb,
-		LightbulbOff,
-		Wifi,
-		WifiOff,
-		Wind,
-		Cloudy,
-	} from "lucide-svelte";
-	import { config, logs, ppm, stats } from "$lib/stores";
-	import { putConfig } from "$lib/api";
+	import { Wind, Cloudy } from "lucide-svelte";
+	import { logs, ppm } from "$lib/stores";
 	import InformationBox from "$lib/InformationBox.svelte";
 	import { getGradient, getTimeUntilValueReached } from "$lib/prediction";
 	import { get } from "svelte/store";
@@ -87,30 +76,6 @@
 </section>
 
 <StatsComponent />
-
-<section>
-	<HeaderGroup title="Einstellungen" />
-
-	<LoadingSwitchButton
-		label="Telefonalarm"
-		icon={[PhoneCall, PhoneMissed]}
-		active={$config.phone_alert}
-		on:click={() => putConfig("phone_alert", !$config.phone_alert)}
-	/>
-	<LoadingSwitchButton
-		label="Lichtindikator"
-		icon={[Lightbulb, LightbulbOff]}
-		active={$config.light_indicator}
-		on:click={() => putConfig("light_indicator", !$config.light_indicator)}
-	/>
-	<LoadingSwitchButton
-		label="Autom. Abwesenheitsschaltung"
-		icon={[Wifi, WifiOff]}
-		active={$config.auto_absence_switching}
-		on:click={() =>
-			putConfig("auto_absence_switching", !$config.auto_absence_switching)}
-	/>
-</section>
 
 <style lang="scss">
 	section {

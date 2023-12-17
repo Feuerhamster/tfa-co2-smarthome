@@ -7,7 +7,7 @@ declare module "co2-monitor" {
 		toString: () => string;
 	}
 
-	interface TemperatureResponse {
+	export interface TemperatureResponse {
 		value: number;
 		type: "float";
 		unit: "degree celcius";

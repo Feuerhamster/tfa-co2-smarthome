@@ -1,17 +1,9 @@
-import type { Co2Response } from "co2-monitor";
+import type { Co2Response, TemperatureResponse } from "co2-monitor";
 import Express, { Request, Response } from "express";
 import { formatSSE } from "./utils.js";
 import { co2Monitor } from "./co2Monitor.js";
 import cors from "cors";
-import {
-	configKeys,
-	config,
-	logs,
-	ConfigKey,
-	logDB,
-	configDB,
-	getAveragePPM,
-} from "./store.js";
+import { logs, logDB, getAveragePPM } from "./store.js";
 import path from "path";
 
 const showLogCount = process.env.SHOW_LOG_COUNT
@@ -53,24 +45,26 @@ api.get("/api/data-stream", (req, res) => {
 		res.write(formatSSE("ping"));
 	}, 5 * 1000);
 
+	// CO2
 	const co2DataListener = (data: Co2Response) => {
 		res.write(formatSSE("co2", data.value));
 	};
 
 	co2Monitor.on("co2", co2DataListener);
 
+	// Temp
+	const tempDataListener = (data: TemperatureResponse) => {
+		res.write(formatSSE("temp", data.value));
+	};
+
+	co2Monitor.on("temperature", tempDataListener);
+
+	// LOG
 	const logDataListener = (key: number, value: number) => {
 		res.write(formatSSE("log", [key, value]));
 	};
 
 	logDB.on("put", logDataListener);
-
-	const configDataListener = (key: ConfigKey, value: boolean) => {
-		console.log(key, value);
-		res.write(formatSSE("config", { key, value }));
-	};
-
-	configDB.on("put", configDataListener);
 
 	// sent initial value
 	if (co2Monitor.co2) {
@@ -80,8 +74,8 @@ api.get("/api/data-stream", (req, res) => {
 	function cleanup() {
 		clearInterval(pingInterval);
 		co2Monitor.off("co2", co2DataListener);
+		co2Monitor.off("temperature", tempDataListener);
 		logDB.off("put", logDataListener);
-		configDB.off("put", configDataListener);
 	}
 
 	// Remove listener and end ping interval
@@ -93,16 +87,6 @@ api.get("/api/logs", async (req, res) => {
 	const l = await logs(showLogCount);
 	console.log(l);
 	res.send(l);
-});
-
-api.get("/api/config", async (req, res) => {
-	const conf = {
-		phone_alert: await config("phone_alert"),
-		light_indicator: await config("light_indicator"),
-		auto_absence_switching: await config("auto_absence_switching"),
-	};
-
-	res.send(conf);
 });
 
 api.get("/api/stats", async (req, res) => {
@@ -118,26 +102,6 @@ api.get("/api/stats", async (req, res) => {
 		daytimeHours: daytimeHours,
 	});
 });
-
-api.put(
-	"/api/config/:key",
-	async (
-		req: Request<{ key: ConfigKey }, {}, { value: boolean }>,
-		res: Response<boolean>,
-	) => {
-		if (
-			!configKeys.includes(req.params.key) ||
-			typeof req.body.value !== "boolean"
-		) {
-			return res.status(422).end();
-		}
-
-		console.log(req.body);
-
-		const r = await config(req.params.key, req.body.value);
-		res.send(r);
-	},
-);
 
 export function initAPI(port: number) {
 	const server = api.listen(port, () => {

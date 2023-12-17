@@ -30,35 +30,6 @@ export async function logs(limit: number) {
 	return (await logDB.iterator({ limit, reverse: true }).all()).reverse();
 }
 
-/**
- * Config
- */
-
-export const configKeys = [
-	"phone_alert",
-	"light_indicator",
-	"auto_absence_switching",
-] as const;
-
-export type ConfigKey = (typeof configKeys)[number];
-
-export const configDB = db.sublevel<string, number>("config", {
-	valueEncoding: "json",
-});
-
-export async function config(key: ConfigKey, value?: boolean) {
-	if (value !== undefined) {
-		await configDB.put(key, +value);
-		return value;
-	}
-
-	try {
-		return Boolean(await configDB.get(key));
-	} catch (e) {
-		return false;
-	}
-}
-
 export async function getAveragePPM(
 	daysBack: number,
 	daytimeHours: [number, number],

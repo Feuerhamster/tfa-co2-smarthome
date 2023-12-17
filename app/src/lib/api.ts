@@ -1,7 +1,7 @@
 import { dev } from "$app/environment";
 import { get } from "svelte/store";
-import { EConnectionState, config, connectionState, logs, ppm } from "./stores";
-import type { ConfigStore, PPM, StatsData, Timestamp } from "./types";
+import { EConnectionState, connectionState, logs, ppm } from "./stores";
+import type { PPM, StatsData, Timestamp } from "./types";
 
 const apiUrl = new URL(
 	"/api/",
@@ -24,17 +24,6 @@ export function sseConnection() {
 		logs.set(log);
 	});
 
-	events.addEventListener("config", (ev) => {
-		const { key, value } = JSON.parse(ev.data) as {
-			key: keyof ConfigStore;
-			value: boolean;
-		};
-
-		const updater: Partial<ConfigStore> = {};
-		updater[key] = value;
-		config.set({ ...get(config), ...updater });
-	});
-
 	events.onopen = () => {
 		EConnectionState.Connected;
 		connectionState.set(EConnectionState.Connected);
@@ -42,27 +31,6 @@ export function sseConnection() {
 	events.onerror = () => {
 		connectionState.set(EConnectionState.Disconnected);
 	};
-}
-
-export async function putConfig(key: keyof ConfigStore, value: boolean) {
-	const res = await fetch(apiUrl + "config/" + key, {
-		method: "PUT",
-		headers: {
-			"Content-Type": "application/json",
-		},
-		body: JSON.stringify({ value }),
-	});
-
-	const data = (await res.json()) as boolean;
-	return data;
-}
-
-export async function getConfigComplete() {
-	const res = await fetch(apiUrl + "config");
-
-	const data = (await res.json()) as ConfigStore;
-
-	config.set(data);
 }
 
 export async function getLogs() {
