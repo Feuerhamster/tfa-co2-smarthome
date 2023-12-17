@@ -4,12 +4,7 @@
 	import "@fontsource/fira-sans/500.css";
 	import "@fontsource/fira-sans/700.css";
 	import { onMount } from "svelte";
-	import {
-		getConfigComplete,
-		getLogs,
-		getStats,
-		sseConnection,
-	} from "$lib/api";
+	import { getLogs, getStats, sseConnection } from "$lib/api";
 	import { logs, stats } from "$lib/stores";
 
 	if (pwaInfo) {
@@ -28,7 +23,6 @@
 
 	onMount(async () => {
 		sseConnection();
-		getConfigComplete();
 		$logs = await getLogs();
 		$stats = await getStats();
 	});
