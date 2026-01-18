@@ -85,3 +85,6 @@ interface FritzBoxWlanDevicesResponse {
 	data: Data;
 	sid: string;
 }
+
+export type Timestamp = number;
+export type PPM = number;

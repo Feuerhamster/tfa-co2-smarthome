@@ -5,21 +5,8 @@ import { co2Monitor } from "./co2Monitor.js";
 import cors from "cors";
 import { logs, logDB, getAveragePPM } from "./store.js";
 import path from "path";
-
-const showLogCount = process.env.SHOW_LOG_COUNT
-	? parseFloat(process.env.SHOW_LOG_COUNT)
-	: 36;
-
-const logAverageDaysBack = process.env.LOG_PURGE_KEEP_DAYS
-	? parseFloat(process.env.LOG_PURGE_KEEP_DAYS)
-	: 5;
-
-const daytimeHours = process.env.STATS_DAYTIME_HOURS
-	? (process.env.STATS_DAYTIME_HOURS.split(",").map((e) => parseFloat(e)) as [
-			number,
-			number,
-	  ])
-	: ([7, 2] as [number, number]);
+import { daytimeHours, logAverageDaysBack, showLogCount } from "./config.js";
+import { getUpdatedPrediction } from "./prediction.js";
 
 const api = Express();
 
@@ -48,6 +35,11 @@ api.get("/api/data-stream", (req, res) => {
 	// CO2
 	const co2DataListener = (data: Co2Response) => {
 		res.write(formatSSE("co2", data.value));
+
+		getUpdatedPrediction(data.value).then(({ ppmPerHour, timePrediction }) => {
+			res.write(formatSSE("ppm/h", ppmPerHour));
+			res.write(formatSSE("vent-prediction", timePrediction));
+		});
 	};
 
 	co2Monitor.on("co2", co2DataListener);
